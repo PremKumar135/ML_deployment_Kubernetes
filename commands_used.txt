@@ -1,0 +1,77 @@
+#########################################################################################################
+################################################# DOCKER ############################################
+#########################################################################################################
+#docker build with no cache
+docker build --no-cache -f Dockerfile -t diab_pred .
+
+#list docker images
+docker images
+
+#list docker images running
+docker ps
+
+#delete docker images
+docker rmi -f IMAGEID
+
+#goes inside the docker container
+docker run -ti diab_pred /bin/bash
+
+#docker mounting the local to folder insdie docker
+docker run -v /home/Dataset:/opt/ml/dataset -ti diab_pred /bin/bash
+
+#port rerouting local_port:docker_port
+docker run -p 7000:8080 -ti diab_pred /bin/bash
+
+#delete the instance of image running and keep the disk space
+docker run --rm -p 8000:8000 -ti diab_pred 
+
+#delete all the cached containers
+docker system prune -a -f
+
+#########################################################################################################
+################################################# KUBERNETES ############################################
+#########################################################################################################
+## Documentation -  https://minikube.sigs.k8s.io/docs/handbook/controls/
+
+#start minikube  cluster
+>> minikube start
+
+#what  minikube contains
+>> kubectl get all -A 
+
+#list of docker images available in kubernetes cluster
+>> minikube image list
+
+#add the docker image inside thee kubernetes cluster
+>> minikube image load diab_pred
+
+#deploy the kubectl
+>> kubectl create deploy any_deployment_name --image=diab_pred
+
+#list deployments
+>> kubectl get deploy
+
+#list pod
+>> kubectl get pod
+
+#expose the port running inside the docker container to outside
+>> kubectl expose deploy/any_deployment_name --name=any_service_name --target-port=8000(docker_port here) --port=1234(to outside)
+
+#run the service 
+>> minikube service any_service_name
+
+#invoke the  model
+>> curl -X POST http://localhost:8000/predictdata -H "accept: application/json" -H "Content-Type: application/json" -d '{"Pregnancies":6, "Glucose":148, "BloodPressure":72, "SkinThickness":35, "Insulin":0, "BMI":33.6, "DiabetesPedigreeFunction":0.62, "Age":59}'
+
+#kill any pods manually
+>> kubectl get pods  --> give pods POD_ID
+>> kubectl delete pod/POD_ID
+
+#to see the logs of a single pod (ec2 instance)
+>> kubectl logs -f POD_ID
+
+#create replicas of pods
+>> kubectl scale deploy/any_deployment_name --replicas=3
+
+#list the endpoints of replicas
+>> kubectl get endpoints

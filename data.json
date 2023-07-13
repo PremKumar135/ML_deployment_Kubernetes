@@ -1,0 +1,14 @@
+{
+    "Pregnancies":6,
+    "Glucose":148,
+    "BloodPressure":72,
+    "SkinThickness":35,
+    "Insulin":0,
+    "BMI":33.6,
+    "DiabetesPedigreeFunction":0.62,
+    "Age":59
+    
+}
+
+# curl -X POST http://localhost:8000/predictdata -H "accept: application/json" -H "Content-Type: application/json" -d '{"Pregnancies":6, "Glucose":148, "BloodPressure":72, "SkinThickness":35, "Insulin":0, "BMI":33.6, "DiabetesPedigreeFunction":0.62, "Age":59}'
+

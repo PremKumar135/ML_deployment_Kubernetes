@@ -1,0 +1,10 @@
+uvicorn
+fastapi
+joblib
+MarkupSafe
+numpy
+pandas
+python-dateutil
+pytz
+scikit-learn
+scipy
